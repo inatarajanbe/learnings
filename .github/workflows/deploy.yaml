@@ -1,0 +1,16 @@
+name: deploy frontend
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD}}
+          docker build -t inatarajans/frontend:latest -f Dockerfile.dev .
+          docker run -e CI=true cygnetops/react-test npm test
